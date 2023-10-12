@@ -59,7 +59,8 @@ header p.hidden {
   opacity: 0;
 }
 
-section {
+section,
+.delivery-form {
   position: absolute;
   top: 0;
   left: 0;
