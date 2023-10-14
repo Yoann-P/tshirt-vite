@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App.jsx";
 import Overlay from "./Overlay.jsx";
-import DeliveryForm from "./components/DeliveryForm.jsx";
+import DeliveryForm from "./components/DeliveryForm/DeliveryForm.jsx";
 
 import "./styles.css";
 

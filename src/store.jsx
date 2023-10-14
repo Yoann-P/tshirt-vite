@@ -10,7 +10,7 @@ const state = proxy({
   selectedSize: "L",
 });
 
-const formState = proxy({
+const DeliveryFormState = proxy({
   data: {
     firstName: "",
     lastName: "",
@@ -27,4 +27,4 @@ const formState = proxy({
   errors: {},
 });
 
-export { state, formState };
+export { state, DeliveryFormState };

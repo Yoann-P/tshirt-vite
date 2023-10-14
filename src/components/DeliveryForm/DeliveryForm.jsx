@@ -1,19 +1,19 @@
 import React from "react";
 
 import { useSnapshot } from "valtio";
-import { formState } from "../store";
-import Inputfield from "./Inputfield";
+import { DeliveryFormState } from "../../store";
+import Inputfield from "../Inputfield/Inputfield";
 
 export default function DeliveryForm() {
-  const snap = useSnapshot(formState);
+  const snap = useSnapshot(DeliveryFormState);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
-    formState.data[name] = type === "checkbox" ? checked : value;
+    DeliveryFormState.data[name] = type === "checkbox" ? checked : value;
   };
 
   const handleValidation = () => {
-    const { data } = formState;
+    const { data } = DeliveryFormState;
     const newErrors = {};
 
     if (!data.firstName || !data.lastName) {
@@ -41,7 +41,7 @@ export default function DeliveryForm() {
       }
     }
 
-    formState.errors = newErrors;
+    DeliveryFormState.errors = newErrors;
 
     return Object.keys(newErrors).length === 0;
   };
