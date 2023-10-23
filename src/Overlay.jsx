@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Logo } from "@pmndrs/branding";
 import {
   AiOutlineHighlight,
@@ -6,8 +8,12 @@ import {
   AiOutlineArrowRight,
 } from "react-icons/ai";
 import { useSnapshot } from "valtio";
+
 import { state } from "./store";
 import { motion, AnimatePresence } from "framer-motion";
+
+import ImageUploading from 'react-images-uploading';
+
 
 export default function Overlay() {
   const snap = useSnapshot(state);
@@ -19,6 +25,8 @@ export default function Overlay() {
     animate: { x: 0, opacity: 1, transition: { ...transition, delay: 0 } },
     exit: { x: -100, opacity: 0, transition: { ...transition, delay: 0 } },
   };
+
+
 
   return (
     <div className="container">
@@ -114,10 +122,52 @@ function Intro({ config }) {
 
 function Customizer({ config }) {
   const snap = useSnapshot(state);
+  const [images, setImages] = useState([]);
+  const [newImgIsLoading, setNewImgIsLoading] = useState(true);
+  const maxNumber = 69;
+
+
+  const addImagesToDecals = (images) => {
+    const newDecals = [...snap.decals];
+    images.forEach((image) => {
+      // Extrait le type MIME (par exemple, 'image/png') à partir de la chaîne base64
+      const mime = image['data_url'].split(':')[1].split(';')[0];
+
+      // Génère un nom de fichier unique en utilisant l'horodatage actuel et un identifiant unique
+      let uniqueFilename = Date.now() + '_' + Math.random().toString(36).substring(7);
+
+      fetch('http://localhost:3003/api/save-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ base64Data: image['data_url'], filename: uniqueFilename }),
+      })
+        .then(response => response.text())
+        .then(result => {
+          // setNewImgIsLoading(true)
+          uniqueFilename = 'upload/' + uniqueFilename
+          state.selectedDecal = uniqueFilename
+          newDecals.push(uniqueFilename);
+          state.decals = newDecals;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+  };
 
   const handleSizeChange = (e) => {
     const selectedSize = e.target.value;
     state.selectedSize = selectedSize; // Mettre à jour la taille sélectionnée dans l'état global
+  };
+
+
+  const onChange = (imageList, addUpdateIndex) => {
+    // Mettez à jour la liste d'images
+    // setImages(imageList);
+    addImagesToDecals(imageList);
+    setNewImgIsLoading(false);
   };
 
   return (
@@ -152,11 +202,9 @@ function Customizer({ config }) {
             <p>Vous avez choisi la taille : {snap.selectedSize}</p>
           )}
         </div>
-
         <div className="decals">
           <div className="decals--container">
             {snap.decals.map((decal) => (
-              // console.log(decal)
               <div
                 key={decal}
                 className="decal"
@@ -167,10 +215,24 @@ function Customizer({ config }) {
             ))}
           </div>
         </div>
-        <button className="upload" style={{ background: snap.selectedColor }}>
-          UPLOAD
-          <AiFillCamera size="1.3em" />
-        </button>
+
+        <ImageUploading value={images} onChange={onChange} dataURLKey="data_url">
+          {({ onImageUpload, isDragging, dragProps }) => (
+            <div>
+              <button
+                className="upload"
+                style={isDragging ? { background: snap.selectedColor } : undefined}
+                onClick={onImageUpload}
+                {...dragProps}
+              >
+                UPLOAD
+                <AiFillCamera size="1.3em" />
+              </button>
+            </div>
+          )}
+        </ImageUploading>
+
+
         <button
           className="exit"
           style={{ background: snap.selectedColor }}
@@ -180,6 +242,6 @@ function Customizer({ config }) {
           <AiOutlineArrowRight size="1.3em" />
         </button>
       </div>
-    </motion.section>
+    </motion.section >
   );
 }
