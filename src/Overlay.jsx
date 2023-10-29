@@ -123,11 +123,13 @@ function Intro({ config }) {
 function Customizer({ config }) {
   const snap = useSnapshot(state);
   const [images, setImages] = useState([]);
+  const [error, setError] = useState(null);
   const [newImgIsLoading, setNewImgIsLoading] = useState(true);
   const maxNumber = 69;
 
 
   const addImagesToDecals = (images) => {
+
     const newDecals = [...snap.decals];
     images.forEach((image) => {
       // Extrait le type MIME (par exemple, 'image/png') à partir de la chaîne base64
@@ -217,8 +219,15 @@ function Customizer({ config }) {
         </div>
 
         <ImageUploading value={images} onChange={onChange} dataURLKey="data_url">
-          {({ onImageUpload, isDragging, dragProps }) => (
+          {({ onImageUpload, isDragging, dragProps, errors }) => (
             <div>
+              {errors && <div>
+                {errors.maxNumber && <span>Number of selected images exceed maxNumber</span>}
+                {errors.acceptType && <span>Your selected file type is not allow</span>}
+                {errors.maxFileSize && <span>Selected file size exceed maxFileSize</span>}
+                {errors.resolution && <span>Selected file is not match your desired resolution</span>}
+              </div>
+              }
               <button
                 className="upload"
                 style={isDragging ? { background: snap.selectedColor } : undefined}
