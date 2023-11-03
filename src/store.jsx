@@ -10,4 +10,21 @@ const state = proxy({
   selectedSize: "L",
 });
 
-export { state };
+const DeliveryFormState = proxy({
+  data: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    deliveryAdress: "",
+    city: "",
+    deliveryPostalCode: "",
+    deliveryOption: "Standard",
+    facturationAdress: "",
+    facturationName: "",
+    sameAsBilling: false,
+  },
+  errors: {},
+});
+
+export { state, DeliveryFormState };
