@@ -188,7 +188,7 @@ button:hover,
 
 .decals img {
   width: 24px;
-  filter: saturate(0) invert(1) brightness(5.5);
+  /* filter: saturate(0) invert(1) brightness(5.5); */
   transition: all 0.2s ease-in-out;
   padding-bottom: 50px;
 }
