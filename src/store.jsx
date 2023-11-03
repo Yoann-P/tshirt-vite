@@ -6,7 +6,7 @@ const state = proxy({
   decals: [uploadFolder + "__react", uploadFolder + "__three2", uploadFolder + "__pmndrs"],
   sizes: ["S", "M", "L", "XL", "XXL"],
   selectedColor: "#ccc",
-  selectedDecal: "three2",
+  selectedDecal: uploadFolder + "__three2",
   selectedSize: "L",
 });
 
